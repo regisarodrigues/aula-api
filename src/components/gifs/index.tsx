@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
-import { CardGif } from './gif';
+import { useFetchGifs } from '@/src/hooks/useFetchGifs';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { GifItem } from '../gif-item';
 
 interface GifsProps {
   query: string;
 }
 
 export function Gifs({ query }: GifsProps) {
-  const [gifs, setGifs] = useState([]);
-  useEffect(() => {
-    // Lógica para buscar GIFs usando a API de sua preferência
-    // com base no searchTerm
-    console.log('Query:', query);
-  }, [query]);
+  const { gifs, isLoading } = useFetchGifs(query);
 
   return (
-    <FlatList data={gifs} renderItem={({ item }) => <CardGif gif={item} />} />
+    <View>
+      {isLoading && <ActivityIndicator size='large' color='#00ff00' />}
+
+      <FlatList data={gifs} renderItem={({ item }) => <GifItem gif={item} />} />
+    </View>
   );
 }
